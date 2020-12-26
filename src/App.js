@@ -1,39 +1,55 @@
 import React, { Component } from 'react';
+import Task from "./components/Task";
+import CreateTask from "./components/CreateTask";
 
 class App extends Component {
   state = {
+    newTask: "",
     todos: [
-      {text: 'learn ReactJS'},
+      {text: 'learn ReactJs'},
       {text: 'learn NodeJS'},
-      {text: 'learn VueJS'},
+      {text: 'learn VueJs'},
       {text: 'learn AngularJS'},
     ]
   }
+
   completeTask = (index) => {
     const todos = [...this.state.todos];
+    
+    todos.splice(index, 1);
 
-    this.splice(index, 1);
-
-    this.setState({todos});
+    this.setState({
+      todos
+    });
   }
-  addTask = () => {
+
+  updateNewTask = (event)=>{
+    this.setState({
+      newTask: event.target.value
+    });
+  }
+
+  addTask = ()=>{
     const todos = [...this.state.todos];
     todos.push({
       text: this.state.newTask
     });
+    this.setState({
+      todos,
+      newTask: ''
+    });
   }
+
   render() {
     return (
       <div className="App">
-      {this.state.todos.map((todo, index) => <li key={index}>
-        {todo.text}
-         <button onClick={() =>{this.completeTask(index)}}>
-          Done
-        </button>
-        </li>)}
+        {this.state.todos.map((todo, index) => 
+          <Task todo={todo} completeTask={()=>this.completeTask(index)} key={index} />
+        )}
 
-        <input value={this.state.newTask} />
-        <button onClick={addTask}>Add Task</button>
+        <CreateTask value={this.state.newTask} 
+          onChange={this.updateNewTask} 
+          addTask={this.addTask} />
       </div>
     );
   }
